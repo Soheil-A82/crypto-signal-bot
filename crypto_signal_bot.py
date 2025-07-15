@@ -23,8 +23,8 @@ def get_signal(coin_id="bitcoin"):
     prices = [price[1] for price in res.json()["prices"]]
     df = pd.DataFrame(prices, columns=["close"])
 
-    df.ta.rsi(close='close', length=14, append=True)
-    rsi = df.iloc[-1]["RSI_14"]
+    rsi_indicator = RSIIndicator(close=df["close"])
+    rsi = rsi_indicator.rsi().iloc[-1]
 
     if rsi < 30:
         return f"🟢 سیگنال خرید برای {coin_id.upper()} (RSI={rsi:.2f})"
@@ -81,5 +81,5 @@ async def main():
     await app.run_polling()
 
 
-if name == 'main':
+if __name__ == "__main__":
     asyncio.run(main())
