@@ -1,6 +1,7 @@
+setuptools>=61
+wheel
 numpy==1.24.4
 pandas
 pandas-ta
 requests
 python-telegram-bot==20.7
-setuptools
