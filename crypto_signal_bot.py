@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 from ta.momentum import RSIIndicator
 from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from telegram.ext import ApplicationBuilder, CommandHandler
 import asyncio
 import datetime
 
@@ -30,9 +30,7 @@ def get_signal(coin_id="bitcoin"):
         return f"⚪️ فعلاً سیگنال مشخصی برای {coin_id.upper()} وجود ندارد (RSI={rsi:.2f})"
 
 # ====== هندلر فرمان /start ======
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.effective_user.id != AUTHORIZED_USER_ID:
-        return
+async def start(update, context):
     await update.message.reply_text("👋 سلام! من ربات سیگنال‌دهنده ارز دیجیتال هستم. دستور /signal BTC رو امتحان کن!")
 
 # ====== هندلر فرمان /signal ======
@@ -62,12 +60,15 @@ async def daily_signal_task(app):
 
 # ====== اجرای برنامه ======
 async def main():
-    app = ApplicationBuilder().token(BOT_TOKEN).build()
+    app = ApplicationBuilder().token("7870514226:AAGsJaD2jqxZJS7PjCoBV-WV6CdmSMBlQns").build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("signal", signal))
+         await app.initialize()
+         await app.start()
+         await app.updater.start_polling()
+         await app.updater.idle()
     asyncio.create_task(daily_signal_task(app))
     print("🤖 ربات راه‌اندازی شد")
-    await app.run_polling()
 
 if __name__ == "__main__":
     asyncio.run(main())
