@@ -4,8 +4,23 @@ import pandas as pd
 from ta.momentum import RSIIndicator
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from flask import Flask
+import threading
 import asyncio
 import datetime
+
+# ====== فقط برای نگه داشتن سرور Flask بخش ======
+app = Flask(__name__)
+
+@app.route('/')
+def home()
+    return "Bot is running"
+
+def run_flask():
+    app.run(host="0.0.0.0", port=10000)
+
+# ====== اجرای Flask در یک Thread جدا ======
+threading.Thread(target=run_flask).start()
 
 # ====== تنظیمات اصلی ======
 BOT_TOKEN = "7870514226:AAGsJaD2jqxZJS7PjCoBV-WV6CdmSMBlQns"
