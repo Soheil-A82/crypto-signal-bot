@@ -1,7 +1,7 @@
 import logging
 import requests
 import pandas as pd
-import pandas_ta as ta
+from ta.momentum import RSIIndicator
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 import asyncio
@@ -19,10 +19,9 @@ def get_signal(coin_id="bitcoin"):
         return "❌ خطا در دریافت داده از CoinGecko"
 
     prices = [price[1] for price in res.json()["prices"]]
-    df["rsi"] = ta.rsi(df["close"], length=14)
+    df = pd.DataFrame(prices, columns=["close"]
 
-    rsi_indicator = RSIIndicator(close=df["close"])
-    rsi = df["rsi"].iloc[-1]
+    rsi = RSIIndicator(df["close"]).rsi().iloc[-1]
 
     if rsi < 30:
         return f"🟢 سیگنال خرید برای {coin_id.upper()} (RSI={rsi:.2f})"
