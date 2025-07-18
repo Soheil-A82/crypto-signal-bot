@@ -63,10 +63,12 @@ async def main():
     app = ApplicationBuilder().token("7870514226:AAGsJaD2jqxZJS7PjCoBV-WV6CdmSMBlQns").build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("signal", signal))
-         await app.initialize()
-         await app.start()
-         await app.updater.start_polling()
-         await app.updater.idle()
+    
+    await app.initialize()
+    await app.start()
+    await app.updater.start_polling()
+    await app.updater.idle()
+    
     asyncio.create_task(daily_signal_task(app))
     print("🤖 ربات راه‌اندازی شد")
 
