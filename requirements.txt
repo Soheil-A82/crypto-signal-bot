@@ -5,3 +5,4 @@ pandas
 ta==0.10.2
 requests
 python-telegram-bot==20.6
+flask
