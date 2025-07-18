@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 from ta.momentum import RSIIndicator
 from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 import asyncio
 import datetime
 
