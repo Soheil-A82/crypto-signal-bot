@@ -2,13 +2,39 @@ import logging
 import requests
 import pandas as pd
 from ta.momentum import RSIIndicator
-from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
-from flask import Flask
+from telegram import Update, Bot
+from telegram.ext import Application, ApplicationBuilder, CommandHandler, ContextTypes
+from flask import Flask, request
 import threading
 import asyncio
 import datetime
+import os
 
+TOKEN = os.environ.get("7870514226:AAGsJaD2jqxZJS7PjCoBV-WV6CdmSMBlQns")
+APP_URL = os.environ.get("https://crypto-signal-bot-6-95qc.onrender.com")
+
+bot = Bot(token=TOKEN)
+application = Application.builder().token(TOKEN).build()
+
+# ====== نمونه دستور /start ======
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("ربات با webhook فعاله ✅")
+
+application.add_handler(CommandHandler("start", start))
+
+# ====== Flask برای دریافت پیام‌های تلگرام ======
+flask_app = Flask(__name__)
+
+@flask_app.post(f"/{TOKEN}")
+async def webhook_handler():
+    update = Update.de_json(request.get_json(force=True), bot)
+    await application.process_update(update)
+    return "ok"
+
+# ====== راه‌اندازی webhook وقتی اپ اجرا میشه ======
+async def set_webhook():
+    await bot.set_webhook(url=f"{APP_URL}/{TOKEN}")
+    
 # ====== فقط برای نگه داشتن سرور Flask بخش ======
 app = Flask(__name__)
 
@@ -88,4 +114,7 @@ async def main():
     print("🤖 ربات راه‌اندازی شد")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    import asyncio
+    asyncio.run(set_webhook())  # تنظیم webhook هنگام اجرای برنامه
+    PORT = int(os.environ.get("PORT", 5000))
+    flask_app.run(host="0.0.0.0", port=PORT)
